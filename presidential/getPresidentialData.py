@@ -62,7 +62,6 @@ def extract_textfile_data(state_shorts: pd.DataFrame):
     # 3rd line is Harris %
     # 4th line is Trump %
     # 5th line is percent in [ignore]
-    off = 0
     for i in range(0, len(lines), 5):
         # get the batch of 5
         sstate, _, dpct, rpct, _ = lines[i:i+5]
