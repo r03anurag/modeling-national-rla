@@ -94,17 +94,24 @@ def add_margins_and_num_ballots_from_2024(_2000_to_2020: pd.DataFrame):
     # get the resultant dataFrame for 2024 data
     _24_data = extract_textfile_data(state_shorts=stateShortForms)
     _00_to_24_ALL = pd.concat([_2000_to_2020.reset_index(drop=True), _24_data.reset_index(drop=True)], axis=0)
+    _00_to_24_ALL.reset_index(inplace=True, drop=True)
     return _00_to_24_ALL
 
 # calculate time needed for each state, as well
 # write final results all together, as well as state-by-state
 def write_results(FINAL: pd.DataFrame):
     FINAL.to_csv("presidential_margins.csv")
+    FINAL_desc = FINAL['num_ballots'].describe()
+    FINAL_desc['total'] = FINAL['num_ballots'].sum()
+    FINAL_desc.to_csv("presidential_margins_stats.csv")
     if not os.path.exists("state-by-state"):
         os.makedirs("state-by-state")
     for state_abbr in set(FINAL['state_abbr']):
         state_data = FINAL[FINAL['state_abbr'] == state_abbr].reset_index(drop=True)
-        state_data.to_csv(f"state-by-state/presidential_margins_in_{state_abbr}.csv")
+        state_data.to_csv(f"state-by-state/presidential_margins_{state_abbr}.csv")
+        state_data_desc = state_data['num_ballots'].describe()
+        state_data_desc['total'] = state_data['num_ballots'].sum()
+        state_data_desc.to_csv(f"state-by-state/presidential_margins_stats_{state_abbr}.csv")
 
 if __name__ == '__main__':
     fres = calculate_margins_and_num_ballots_from_2000_to_2020()
