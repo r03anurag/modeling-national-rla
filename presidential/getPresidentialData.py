@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+from math import *
 # pull presidential election data
 # data source citations (BibTeX, website)
 pd.set_option('display.max_colwidth', None)
@@ -19,6 +20,7 @@ url = {https://doi.org/10.7910/DVN/42MVDX}
 """MIT Election Data and Science Lab, 2017, "U.S. President 1976-2020", 
 https://doi.org/10.7910/DVN/42MVDX, Harvard Dataverse, V8, UNF:6:F0opd1IRbeYI9QyVfzglUw== [fileUNF]"""
 # for 2024: https://apps.npr.org/2024-election-results/ (data), https://www.scouting.org/resources/los/states/ (state abbr.)
+# in 2020, it seems that Michigan's risk limit was 0.07139%.
 
 # function that calculates the margins and number of ballots (2000-2020)
 def calculate_margins_and_num_ballots_from_2000_to_2020():
@@ -29,12 +31,9 @@ def calculate_margins_and_num_ballots_from_2000_to_2020():
     pres_elec_df['writein'] = pres_elec_df['writein'].astype(dtype=bool)
     pres_elec_df = pres_elec_df[pres_elec_df["party_simplified"].isin(['DEMOCRAT', 'REPUBLICAN']) & ~pres_elec_df['writein']]
 
-    # get rid of some columns we don't need
-    pres_elec_df = pres_elec_df.drop(columns=['notes', 'version', 'party_detailed', 'office', 'state_ic', 'state_cen', 'state_fips', 'candidate'])
-
     # for each election year from 2000-2024, and state combination, find the margin
-    republican = pres_elec_df[pres_elec_df['party_simplified'].str.startswith("R")].drop(columns=['party_simplified'])
-    democrat = pres_elec_df[pres_elec_df['party_simplified'].str.startswith("D")].drop(columns=['party_simplified'])
+    republican = pres_elec_df[pres_elec_df['party_simplified'].str.startswith("R")]
+    democrat = pres_elec_df[pres_elec_df['party_simplified'].str.startswith("D")]
     margin = (republican['candidatevotes'].reset_index(drop=True)-democrat['candidatevotes'].reset_index(drop=True)).abs()/republican['totalvotes'].reset_index(drop=True)
     five_pct_rla_ballots = ((7/margin)+1).astype(int).reset_index(drop=True)
     FINAL = pd.concat([republican['year'].reset_index(drop=True), republican['state'].reset_index(drop=True), republican['state_po'].reset_index(drop=True),
@@ -97,23 +96,25 @@ def add_margins_and_num_ballots_from_2024(_2000_to_2020: pd.DataFrame):
     _00_to_24_ALL.reset_index(inplace=True, drop=True)
     return _00_to_24_ALL
 
-# calculate time needed for each state, as well
+# calculate procedural costs for each state
+def calculate_procedural_costs(data: pd.DataFrame):
+    # add the procdural cost according to our model: 1.5min/ballot, 0.35USD/ballot
+    data["procedural_cost"] = (data['num_ballots']*1.5*0.35).round(2)
+    data['procedural_cost'] = data['procedural_cost'].apply(func=lambda cost: f"{cost:.2f}")
+    return data
+
 # write final results all together, as well as state-by-state
 def write_results(FINAL: pd.DataFrame):
     FINAL.to_csv("presidential_margins.csv")
-    FINAL_desc = FINAL['num_ballots'].describe()
-    FINAL_desc['total'] = FINAL['num_ballots'].sum()
-    FINAL_desc.to_csv("presidential_margins_stats.csv")
     if not os.path.exists("state-by-state"):
         os.makedirs("state-by-state")
     for state_abbr in set(FINAL['state_abbr']):
         state_data = FINAL[FINAL['state_abbr'] == state_abbr].reset_index(drop=True)
         state_data.to_csv(f"state-by-state/presidential_margins_{state_abbr}.csv")
-        state_data_desc = state_data['num_ballots'].describe()
-        state_data_desc['total'] = state_data['num_ballots'].sum()
-        state_data_desc.to_csv(f"state-by-state/presidential_margins_stats_{state_abbr}.csv")
+        
 
 if __name__ == '__main__':
     fres = calculate_margins_and_num_ballots_from_2000_to_2020()
     fres = add_margins_and_num_ballots_from_2024(fres)
+    fres = calculate_procedural_costs(fres)
     write_results(fres)
