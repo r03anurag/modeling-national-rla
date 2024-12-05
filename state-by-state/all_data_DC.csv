@@ -1,7 +1,7 @@
-,year,state,state_po,num_ballots_house,procedural_cost_house,num_ballots_senate,procedural_cost_senate,num_ballots_president,procedural_cost_president,num_ballots_total,procedural_cost_total
-0,2000,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,10,5.25,10,5.25
-1,2004,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72
-2,2008,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72
-3,2012,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72
-4,2016,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72
-5,2024,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72
+,year,state,state_po,num_ballots_house,procedural_cost_house,num_ballots_senate,procedural_cost_senate,num_ballots_president,procedural_cost_president,num_ballots_total,procedural_cost_total,totalvotes
+0,2000,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,10,5.25,10,5.25,
+1,2004,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72,
+2,2008,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72,
+3,2012,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72,
+4,2016,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72,
+5,2024,DISTRICT OF COLUMBIA,DC,0,0.0,0,0.0,9,4.72,9,4.72,

@@ -6,9 +6,33 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.max_rows', None)
 
+# data sources: 
+'''
+MIT Election Data and Science Lab, 2017, "U.S. House 1976-2022", 
+https://doi.org/10.7910/DVN/IG0UN2, Harvard Dataverse, V13, 
+UNF:6:Ky5FkettbvohjTSN/IVldA== [fileUNF]
+'''
+
+# function that obtains total number of votes cast per year per state
+def get_total_votes_cast():
+    # read the data, and get relevant years.
+    house_data = pd.read_csv("house/dataverse_files/1976-2022-house.csv")
+    house_data = house_data[house_data['year'].between(2000,2022)]
+    # drop any unnecessary columns
+    house_data_cols = house_data.columns.tolist()
+    for hccol in house_data_cols:
+        if hccol not in ['year', 'state', 'state_po', 'district', 'totalvotes']:
+            house_data.drop(columns=[hccol], inplace=True)
+    # drop duplicate rows
+    house_data.drop_duplicates(inplace=True)
+    house_data.drop(columns=['district'], inplace=True)
+    # get the total number of votes
+    totals = house_data.groupby(by=['year','state','state_po']).sum()
+    return totals
+
 # get all the 3 dataframes
 def compute_totals():
-    house = pd.read_csv("house/house.csv")
+    house = pd.read_csv("house/house_margins.csv")
     senate = pd.read_csv("senate/senate_margins.csv")
     president = pd.read_csv("presidential/presidential_margins.csv")
     # perform a full-outer join on them
@@ -43,6 +67,9 @@ def compute_totals():
         if col.startswith("num_ballots"):
             allHSP[col] = allHSP[col].astype(int)
     allHSP["procedural_cost_total"] = allHSP["procedural_cost_total"].apply(lambda pc: f"{pc:.2f}")
+    # attach total votes data
+    totHSP = get_total_votes_cast()
+    allHSP = pd.merge(left=allHSP, right=totHSP, how='inner', on=['year','state','state_po'])
     return allHSP
 
 # function that writes results

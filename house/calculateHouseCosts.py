@@ -13,11 +13,12 @@ def read_data():
     data.rename(mapper={"Unnamed: 3":'num_ballots'}, axis=1, inplace=True)
     cols = data.columns.to_list()
     data["year"] = [2022]*len(data)
-    for yr in range(2020,1999,-2):
-        hec = pd.read_excel("house_election_chart.xlsx", 
-                            sheet_name=str(yr), names=cols)
-        hec["year"] = [yr]*len(hec)
-        data = pd.concat([data, hec], axis=0)
+    for yr in range(2024,1999,-2):
+        if yr != 2022:
+            hec = pd.read_excel("house_election_chart.xlsx", 
+                                sheet_name=str(yr), names=cols)
+            hec["year"] = [yr]*len(hec)
+            data = pd.concat([data, hec], axis=0)
     return data
 
 # transform the data
@@ -51,20 +52,21 @@ def transform_data(data: pd.DataFrame):
         if col not in ["year", "state", "procedural_cost", "state_po", "num_ballots"]:
             data.drop(columns=[col], inplace=True)
     data = data.groupby(by=['year', 'state', 'state_po']).sum()
+    data["margin"] = data["num_ballots"].apply(lambda nb: 7/nb if nb != 0.0 else 0.0)
     data["procedural_cost"] = data["procedural_cost"].apply(lambda cs: f"{cs:.2f}")
     return data
 
 # write the final data to csv
 def write_results(data: pd.DataFrame):
-    data.to_csv("house.csv")
-    new_data = pd.read_csv('house.csv')
+    data.to_csv("house_margins.csv")
+    new_data = pd.read_csv('house_margins.csv')
     new_data["procedural_cost"] = new_data["procedural_cost"].apply(lambda cs: f"{cs:.2f}")
     states = set(new_data.state_po)
     if not os.path.exists("state-by-state"):
         os.mkdir("state-by-state")
     for st in states:
         stsp = new_data[new_data.state_po==st].reset_index(drop=True)
-        stsp.to_csv(f"state-by-state/house_data_{st}.csv")
+        stsp.to_csv(f"state-by-state/house_margins_{st}.csv")
     return 
 
 if __name__ == "__main__":
