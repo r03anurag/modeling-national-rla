@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-from math import *
 # pull presidential election data
 # data source citations (BibTeX, website)
 pd.set_option('display.max_colwidth', None)
