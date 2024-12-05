@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,SOUTH CAROLINA,SC,0.15958861248845654,44,23.10
 1,2004,SOUTH CAROLINA,SC,0.1708011374173209,41,21.52
 2,2008,SOUTH CAROLINA,SC,0.08977083961271629,78,40.95

@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,HAWAII,HI,0.18328799215112881,39,20.47
 1,2004,HAWAII,HI,0.08744956446541247,81,42.52
 2,2008,HAWAII,HI,0.45016708181307885,16,8.40

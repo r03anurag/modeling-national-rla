@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,DISTRICT OF COLUMBIA,DC,0.7620335423539085,10,5.25
 1,2004,DISTRICT OF COLUMBIA,DC,0.7984410288857838,9,4.72
 2,2008,DISTRICT OF COLUMBIA,DC,0.8592455229017539,9,4.72

@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,NEBRASKA,NE,0.2899232302132367,25,13.12
 1,2004,NEBRASKA,NE,0.33216480378726937,22,11.55
 2,2008,NEBRASKA,NE,0.14933587592866923,47,24.67

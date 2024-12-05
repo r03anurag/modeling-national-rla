@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,WEST VIRGINIA,WV,0.06322555560355735,111,58.28
 1,2004,WEST VIRGINIA,WV,0.12865576772445328,55,28.87
 2,2008,WEST VIRGINIA,WV,0.13120592724658037,54,28.35

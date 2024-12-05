@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,ALABAMA,AL,0.1491725240536959,47,24.67
 1,2004,ALABAMA,AL,0.25616287435323604,28,14.70
 2,2008,ALABAMA,AL,0.21576478734595697,33,17.32

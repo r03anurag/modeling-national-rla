@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,VIRGINIA,VA,0.08038118642193114,88,46.20
 1,2004,VIRGINIA,VA,0.08206038965204833,86,45.15
 2,2008,VIRGINIA,VA,0.06298969182920344,112,58.80

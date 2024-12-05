@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,OKLAHOMA,OK,0.21880947538908907,32,16.80
 1,2004,OKLAHOMA,OK,0.3114080332951212,23,12.08
 2,2008,OKLAHOMA,OK,0.31290162245387004,23,12.08

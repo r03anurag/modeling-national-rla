@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,OREGON,OR,0.004410182861240588,1588,833.70
 1,2004,OREGON,OR,0.04155746299778634,169,88.72
 2,2008,OREGON,OR,0.1634782456462844,43,22.58

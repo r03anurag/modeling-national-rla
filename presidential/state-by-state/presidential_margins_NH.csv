@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,NEW HAMPSHIRE,NH,0.012671306896557783,553,290.32
 1,2004,NEW HAMPSHIRE,NH,0.013672678379506021,512,268.80
 2,2008,NEW HAMPSHIRE,NH,0.0960546858517237,73,38.32

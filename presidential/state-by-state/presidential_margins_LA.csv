@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,LOUISIANA,LA,0.07675730719913731,92,48.30
 1,2004,LOUISIANA,LA,0.14506156637877707,49,25.72
 2,2008,LOUISIANA,LA,0.18629807508411275,38,19.95

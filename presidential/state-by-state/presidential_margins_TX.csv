@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,TEXAS,TX,0.2131664137653241,33,17.32
 1,2004,TEXAS,TX,0.22861562306320185,31,16.27
 2,2008,TEXAS,TX,0.11769239006436781,60,31.50

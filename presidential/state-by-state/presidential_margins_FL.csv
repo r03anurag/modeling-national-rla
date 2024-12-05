@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,FLORIDA,FL,9.005368004279646e-05,77732,40809.30
 1,2004,FLORIDA,FL,0.050064062046227174,140,73.50
 2,2008,FLORIDA,FL,0.028179861046886905,249,130.72

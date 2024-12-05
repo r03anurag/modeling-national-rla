@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,NEW YORK,NY,0.2418945391773099,29,15.22
 1,2004,NEW YORK,NY,0.18444051273141965,38,19.95
 2,2008,NEW YORK,NY,0.2883972442958247,25,13.12

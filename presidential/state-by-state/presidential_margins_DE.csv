@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,DELAWARE,DE,0.13061438834423822,54,28.35
 1,2004,DELAWARE,DE,0.07594019030357951,93,48.82
 2,2008,DELAWARE,DE,0.24995635432528637,29,15.22

@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,WYOMING,WY,0.4092436109785426,18,9.45
 1,2004,WYOMING,WY,0.39716477829583247,18,9.45
 2,2008,WYOMING,WY,0.3220428082729184,22,11.55

@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,NEVADA,NV,0.0354382648590641,198,103.95
 1,2004,NEVADA,NV,0.025916510263540773,271,142.27
 2,2008,NEVADA,NV,0.1249256081533464,57,29.92

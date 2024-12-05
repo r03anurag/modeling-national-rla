@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,CALIFORNIA,CA,0.11798240022498997,60,31.50
 1,2004,CALIFORNIA,CA,0.09947861557432593,71,37.28
 2,2008,CALIFORNIA,CA,0.24057779514669772,30,15.75

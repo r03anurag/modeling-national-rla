@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,ILLINOIS,IL,0.1201164123634468,59,30.98
 1,2004,ILLINOIS,IL,0.10344533382679329,68,35.70
 2,2008,ILLINOIS,IL,0.2513719197786603,28,14.70

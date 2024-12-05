@@ -37,12 +37,12 @@ def calculate_margins_and_num_ballots_from_2000_to_2020():
     five_pct_rla_ballots = ((7/margin)+1).astype(int).reset_index(drop=True)
     FINAL = pd.concat([republican['year'].reset_index(drop=True), republican['state'].reset_index(drop=True), republican['state_po'].reset_index(drop=True),
                     margin, five_pct_rla_ballots], ignore_index=True, axis=1).reset_index(drop=True)
-    FINAL.rename(mapper={0: "year", 1: "state", 2: "state_abbr", 3: "margin", 4:"num_ballots"}, inplace=True, axis=1)
+    FINAL.rename(mapper={0: "year", 1: "state", 2: "state_po", 3: "margin", 4:"num_ballots"}, inplace=True, axis=1)
     return FINAL
 
 # function to extract the data from the text file containing 2024 election data
 def extract_textfile_data(state_shorts: pd.DataFrame):
-    preselec24 = {"year": [], "state": [], "state_abbr": [], "margin": [], "num_ballots": []}
+    preselec24 = {"year": [], "state": [], "state_po": [], "margin": [], "num_ballots": []}
     lines = []
     with open("dataverse_files/2024_US_President.txt") as datafile:
         for line in datafile:
@@ -70,7 +70,7 @@ def extract_textfile_data(state_shorts: pd.DataFrame):
             continue
         long, abbr = sstate_row.iloc[0].State, sstate_row.iloc[0].Postal
         preselec24['state'].append(long)
-        preselec24['state_abbr'].append(abbr)
+        preselec24['state_po'].append(abbr)
         # process 3rd and 4th lines
         thisMargin = eval(f"{dpct.replace("%", "")} - {rpct.replace("%", "")}")
         thisMargin /= 100
@@ -107,8 +107,8 @@ def write_results(FINAL: pd.DataFrame):
     FINAL.to_csv("presidential_margins.csv")
     if not os.path.exists("state-by-state"):
         os.makedirs("state-by-state")
-    for state_abbr in set(FINAL['state_abbr']):
-        state_data = FINAL[FINAL['state_abbr'] == state_abbr].reset_index(drop=True)
+    for state_abbr in set(FINAL['state_po']):
+        state_data = FINAL[FINAL['state_po'] == state_abbr].reset_index(drop=True)
         state_data.to_csv(f"state-by-state/presidential_margins_{state_abbr}.csv")
         
 

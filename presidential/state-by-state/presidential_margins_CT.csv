@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,CONNECTICUT,CT,0.17466024905363045,41,21.52
 1,2004,CONNECTICUT,CT,0.1036643106116221,68,35.70
 2,2008,CONNECTICUT,CT,0.22367366370494876,32,16.80

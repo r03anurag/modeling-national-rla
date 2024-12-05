@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,NEW MEXICO,NM,0.0006114215551156439,11449,6010.72
 1,2004,NEW MEXICO,NM,0.007917451183651019,885,464.62
 2,2008,NEW MEXICO,NM,0.15128445428460607,47,24.67

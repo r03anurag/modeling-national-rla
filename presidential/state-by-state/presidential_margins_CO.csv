@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,COLORADO,CO,0.0835670576236614,84,44.10
 1,2004,COLORADO,CO,0.046732531003038084,150,78.75
 2,2008,COLORADO,CO,0.08952714731354428,79,41.47

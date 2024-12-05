@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,MARYLAND,MD,0.16303527729442646,43,22.58
 1,2004,MARYLAND,MD,0.1299324983495775,54,28.35
 2,2008,MARYLAND,MD,0.2544482511753324,28,14.70

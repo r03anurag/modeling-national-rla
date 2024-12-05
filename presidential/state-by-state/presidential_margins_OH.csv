@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,OHIO,OH,0.03546045744808909,198,103.95
 1,2004,OHIO,OH,0.0210733909237597,333,174.82
 2,2008,OHIO,OH,0.04593691697250519,153,80.32

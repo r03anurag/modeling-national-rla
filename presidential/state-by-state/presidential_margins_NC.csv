@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,NORTH CAROLINA,NC,0.12812085118645347,55,28.87
 1,2004,NORTH CAROLINA,NC,0.12434051117292824,57,29.92
 2,2008,NORTH CAROLINA,NC,0.003288677803988122,2129,1117.72

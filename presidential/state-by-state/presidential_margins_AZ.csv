@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,ARIZONA,AZ,0.06286553143048114,112,58.80
 1,2004,ARIZONA,AZ,0.10472601157218205,67,35.17
 2,2008,ARIZONA,AZ,0.0851999694786296,83,43.58

@@ -1,4 +1,4 @@
-,year,state,state_abbr,margin,num_ballots,procedural_cost
+,year,state,state_po,margin,num_ballots,procedural_cost
 0,2000,PENNSYLVANIA,PA,0.041700383841406626,168,88.20
 1,2004,PENNSYLVANIA,PA,0.02500142991096421,280,147.00
 2,2008,PENNSYLVANIA,PA,0.10318475532122943,68,35.70
