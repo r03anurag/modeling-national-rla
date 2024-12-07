@@ -81,7 +81,6 @@ def extract_textfile_data(state_shorts: pd.DataFrame):
     # for consistency, all state names are uppercase
     preselec24_df['state'] = preselec24_df['state'].str.upper()
     return preselec24_df
-        
 
 # 2024 data
 def add_margins_and_num_ballots_from_2024(_2000_to_2020: pd.DataFrame):

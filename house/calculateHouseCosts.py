@@ -9,13 +9,13 @@ pd.set_option('display.max_rows', None)
 
 # read all dataframes from 2022-2000
 def read_data():
-    data = pd.read_excel("house_election_chart.xlsx", sheet_name="2022")
+    data = pd.read_excel("dataverse_files/house_election_chart.xlsx", sheet_name="2022")
     data.rename(mapper={"Unnamed: 3":'num_ballots'}, axis=1, inplace=True)
     cols = data.columns.to_list()
     data["year"] = [2022]*len(data)
     for yr in range(2024,1999,-2):
         if yr != 2022:
-            hec = pd.read_excel("house_election_chart.xlsx", 
+            hec = pd.read_excel("dataverse_files/house_election_chart.xlsx", 
                                 sheet_name=str(yr), names=cols)
             hec["year"] = [yr]*len(hec)
             data = pd.concat([data, hec], axis=0)

@@ -12,6 +12,25 @@ MIT Election Data and Science Lab, 2017, "U.S. House 1976-2022",
 https://doi.org/10.7910/DVN/IG0UN2, Harvard Dataverse, V13, 
 UNF:6:Ky5FkettbvohjTSN/IVldA== [fileUNF]
 '''
+# 2024 US election totals
+# https://www.bbc.com/news/articles/cvglg3klrpzo
+
+# function that transforms raw 2024 results
+def transform_2024_results():
+    # 2024 House totals - based on presidential totals. Transform appropriately
+    house24 = pd.read_csv("presidential/dataverse_files/2024_votes.tsv", sep="\t")
+    house24['State'] = house24['State'].str.upper()
+    house24 = house24[(house24["Party"].str.contains("Democrat")) | (house24["Party"].str.contains("Republican"))]
+    house24["Votes"] = house24["Votes"].str.replace(",","").astype(int)
+    house24['year'] = [2024]*len(house24)
+    house24.rename(mapper={'State':'state','Votes':'totalvotes'}, inplace=True, axis=1)
+    h24cols = house24.columns.to_list()
+    for hcl in h24cols:
+        if hcl not in ['state', 'totalvotes','year']:
+            house24.drop(columns=[hcl], inplace=True)    
+    house24 = house24.groupby(by=['state','year']).sum()
+    house24.to_csv("intermediate_data/2024_votes_transformed.csv")
+    return 
 
 # function that obtains total number of votes cast per year per state
 def get_total_votes_cast():
@@ -26,9 +45,16 @@ def get_total_votes_cast():
     # drop duplicate rows
     house_data.drop_duplicates(inplace=True)
     house_data.drop(columns=['district'], inplace=True)
+    # obtain 2024 data, and add state abbreviation data
+    transform_2024_results()
+    h24 = pd.read_csv("intermediate_data/2024_votes_transformed.csv")
+    h24['state_po'] = h24['state'].apply(lambda st: set(house_data[house_data.state==st].state_po).pop())
+    # stack with current data
+    house_data = pd.concat(objs=[house_data,h24],axis=0)
     # get the total number of votes
     totals = house_data.groupby(by=['year','state','state_po']).sum()
-    return totals
+    totals.to_csv("intermediate_data/totals.csv")
+    return
 
 # get all the 3 dataframes
 def compute_totals():
@@ -68,7 +94,8 @@ def compute_totals():
             allHSP[col] = allHSP[col].astype(int)
     allHSP["procedural_cost_total"] = allHSP["procedural_cost_total"].apply(lambda pc: f"{pc:.2f}")
     # attach total votes data
-    totHSP = get_total_votes_cast()
+    get_total_votes_cast()
+    totHSP = pd.read_csv("intermediate_data/totals.csv")
     allHSP = pd.merge(left=allHSP, right=totHSP, how='inner', on=['year','state','state_po'])
     return allHSP
 
