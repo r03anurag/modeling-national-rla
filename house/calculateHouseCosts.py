@@ -59,7 +59,7 @@ def transform_data(data: pd.DataFrame):
 # Procedural Total: (# of ballots needed for RLA *  "minutely" wage of county clerk * time per ballot)
 def procedural_cost(nbals: int):
     minutesWage = 0.35
-    minutes_balTime = 1.5
+    minutes_balTime = 2
     return nbals*minutesWage*minutes_balTime
 
 # write the final data to csv

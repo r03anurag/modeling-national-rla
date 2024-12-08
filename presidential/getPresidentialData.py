@@ -98,7 +98,7 @@ def add_margins_and_num_ballots_from_2024(_2000_to_2020: pd.DataFrame):
 # Procedural Total: (# of ballots needed for RLA *  "minutely" wage of county clerk * time per ballot)
 def procedural_cost(nbals: int):
     minutesWage = 0.35
-    minutes_balTime = 1.5
+    minutes_balTime = 2
     return nbals*minutesWage*minutes_balTime
 
 # calculate procedural costs for each state

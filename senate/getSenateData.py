@@ -125,7 +125,7 @@ def prepare_2022_senate_data():
 # Procedural Total: (# of ballots needed for RLA *  "minutely" wage of county clerk * time per ballot)
 def procedural_cost(nbals: int):
     minutesWage = 0.35
-    minutes_balTime = 1.5
+    minutes_balTime = 2.
     return nbals*minutesWage*minutes_balTime
 
 def join_data_and_add_procedural_cost(df22: pd.DataFrame, df24: pd.DataFrame):
