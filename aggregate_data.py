@@ -15,6 +15,9 @@ UNF:6:Ky5FkettbvohjTSN/IVldA== [fileUNF]
 # 2024 US election totals
 # https://www.bbc.com/news/articles/cvglg3klrpzo
 
+# 2024 House percentags:
+# https://www.nbcnews.com/politics/2024-presidential-election
+
 # function that transforms raw 2024 results
 def transform_2024_results():
     # 2024 House totals - based on presidential totals. Transform appropriately
