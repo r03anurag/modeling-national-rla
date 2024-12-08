@@ -121,14 +121,20 @@ def prepare_2022_senate_data():
     # final data
     return data
 
+# function that applies the procedural cost model
+# Procedural Total: (# of ballots needed for RLA *  "minutely" wage of county clerk * time per ballot)
+def procedural_cost(nbals: int):
+    minutesWage = 0.35
+    minutes_balTime = 1.5
+    return nbals*minutesWage*minutes_balTime
+
 def join_data_and_add_procedural_cost(df22: pd.DataFrame, df24: pd.DataFrame):
     # re-read 2000-20
     _00_to_20 = pd.read_csv("dataverse_files/senate_margins_0020.csv")
     # simply concatenate the other 2 as is
     final = pd.concat([_00_to_20, df22, df24], axis=0).reset_index(drop=True)
-    # add the procdural cost according to our model: 1.5min/ballot, 0.35USD/ballot
-    final["procedural_cost"] = (final['num_ballots']*1.5*0.35).round(2)
-    final['procedural_cost'] = final['procedural_cost'].apply(func=lambda cost: f"{cost:.2f}")
+    # add the procdural cost according to our model
+    final["procedural_cost"] = final["num_ballots"].apply(lambda nb: procedural_cost(nbals=nb)).round(2)
     return final
 
 def write_results(allData: pd.DataFrame):

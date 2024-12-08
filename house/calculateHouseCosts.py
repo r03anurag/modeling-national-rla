@@ -40,7 +40,7 @@ def transform_data(data: pd.DataFrame):
     data["State"] = data["State and District"].apply(get_state)
     # apply our procedural cost model: 
     # num_ballots * 1.5min/ballot * 0.35USD/min
-    data["procedural_cost"] = data["num_ballots"]*(1.5*0.35)
+    data["procedural_cost"] = data["num_ballots"].apply(lambda nb: procedural_cost(nbals=nb)).round(2)
     # add state abbr. data
     abbr = pd.read_csv("state_abbr.tsv", sep="\t")
     data = pd.merge(left=data, right=abbr, on=['State'], how='inner')
@@ -53,14 +53,19 @@ def transform_data(data: pd.DataFrame):
             data.drop(columns=[col], inplace=True)
     data = data.groupby(by=['year', 'state', 'state_po']).sum()
     data["margin"] = data["num_ballots"].apply(lambda nb: 7/nb if nb != 0.0 else 0.0)
-    data["procedural_cost"] = data["procedural_cost"].apply(lambda cs: f"{cs:.2f}")
     return data
+
+# function that applies the procedural cost model
+# Procedural Total: (# of ballots needed for RLA *  "minutely" wage of county clerk * time per ballot)
+def procedural_cost(nbals: int):
+    minutesWage = 0.35
+    minutes_balTime = 1.5
+    return nbals*minutesWage*minutes_balTime
 
 # write the final data to csv
 def write_results(data: pd.DataFrame):
     data.to_csv("house_margins.csv")
     new_data = pd.read_csv('house_margins.csv')
-    new_data["procedural_cost"] = new_data["procedural_cost"].apply(lambda cs: f"{cs:.2f}")
     states = set(new_data.state_po)
     if not os.path.exists("state-by-state"):
         os.mkdir("state-by-state")

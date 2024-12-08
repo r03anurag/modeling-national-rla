@@ -1,6 +1,7 @@
 import pandas as pd
 from functools import reduce
 import os
+import matplotlib.pyplot as plt
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', None)
@@ -15,8 +16,11 @@ UNF:6:Ky5FkettbvohjTSN/IVldA== [fileUNF]
 # 2024 US election totals
 # https://www.bbc.com/news/articles/cvglg3klrpzo
 
-# 2024 House percentags:
-# https://www.nbcnews.com/politics/2024-presidential-election
+# House percentages:
+# https://www.nbcnews.com/politics/{year}-elections/house-results 
+
+# number of counties by state:
+# https://wisevoter.com/state-rankings/states-with-the-most-counties/ 
 
 # function that transforms raw 2024 results
 def transform_2024_results():
@@ -90,26 +94,146 @@ def compute_totals():
     allHSP["procedural_cost_total"] = allHSP['procedural_cost_house'] + \
                                         allHSP['procedural_cost_senate'] + \
                                         allHSP['procedural_cost_president']
+    allHSP["procedural_cost_excl_pres"] = allHSP['procedural_cost_house'] + allHSP['procedural_cost_senate']
     # typecast columns to the proper type
     allHSP_cols = allHSP.columns.to_list()
     for col in allHSP_cols:
         if col.startswith("num_ballots"):
             allHSP[col] = allHSP[col].astype(int)
-    allHSP["procedural_cost_total"] = allHSP["procedural_cost_total"].apply(lambda pc: f"{pc:.2f}")
     # attach total votes data
     get_total_votes_cast()
     totHSP = pd.read_csv("intermediate_data/totals.csv")
-    allHSP = pd.merge(left=allHSP, right=totHSP, how='inner', on=['year','state','state_po'])
+    allHSP = pd.merge(left=allHSP, right=totHSP, how='outer', on=['year','state','state_po'])
+    allHSP.fillna(0.0, inplace=True)
     return allHSP
+
+# function that will calculate total prep costs
+# Prep Total (for each state): 8 * clerk_wage/hr * num_counties + num_ballots_cast/500 * time_to_index
+def add_prep_costs(tot: pd.DataFrame):
+    # number of counties by state, transform appropriately.
+    counties = pd.read_csv("counties_by_state.tsv", sep="\t")
+    counties['State'] = counties['State'].str.upper()
+    counties.drop(columns=["#"], inplace=True)
+    # apply number of counties data to each states
+    tot["num_counties"] = tot["state"].apply(lambda st: counties[counties.State==st]["Total Number of Counties"].item())
+    clerk_wage_hr = 21.23
+    hrs_to_idx = 2
+    # add prep total
+    tot["prep_cost_total"] = (8*clerk_wage_hr*tot["num_counties"]) + ((tot['totalvotes']/500)*hrs_to_idx)
+    return tot
+
+# function that will add central costs
+# constant value of 33580
+def add_central_costs(tot: pd.DataFrame):
+    centrals = [33580]*len(tot)
+    tot["central_cost_total"] = centrals
+    return tot
+
+# function that adds all 3 costs together
+def add_all3_costs():
+    totals_data = compute_totals()
+    totals_data = add_prep_costs(tot=totals_data)
+    totals_data = add_central_costs(tot=totals_data)
+    totals_data["cost_total"] = totals_data['central_cost_total'] + \
+                                totals_data['prep_cost_total'] + \
+                                totals_data['procedural_cost_total']
+    totals_data["cost_total_excl_pres"] = totals_data['central_cost_total'] + \
+                                        totals_data['prep_cost_total'] + \
+                                        totals_data['procedural_cost_excl_pres']
+    return totals_data
+
+# function that would give the total cost of the RLA (national) by year, as well as average
+def calculate_national_rla_cost(totData: pd.DataFrame):
+    natl_rla_cost_wpres = pd.concat([totData["year"], totData["cost_total"]], axis=1)
+    natl_rla_cost_nopres = pd.concat([totData["year"], totData["cost_total_excl_pres"]], axis=1)
+    natl_rla_cost_wpres = natl_rla_cost_wpres[natl_rla_cost_wpres['year']%4==0]
+    natl_rla_cost_wpres = natl_rla_cost_wpres.groupby(by=['year']).sum()
+    natl_rla_cost_nopres = natl_rla_cost_nopres.groupby(by=['year']).sum()
+    if not os.path.exists("important-data"):
+        os.mkdir("important-data")
+    # 1. cost for elections that include president
+    natl_rla_cost_wpres['cost_total'] = natl_rla_cost_wpres['cost_total'].round(2)
+    # 2. cost for elections that exclude president
+    natl_rla_cost_nopres['cost_total_excl_pres'] = natl_rla_cost_nopres['cost_total_excl_pres'].round(2)
+    natl_rla_cost_wpres.to_csv("important-data/total_yearly_cost_(president).csv")
+    natl_rla_cost_nopres.to_csv("important-data/total_yearly_cost_(no_president).csv")
+    print("National Avg. RLA cost (president):", natl_rla_cost_wpres['cost_total'].mean())
+    print("National Avg. RLA cost (no-president):", natl_rla_cost_nopres['cost_total_excl_pres'].mean())
+    return
+
+# function that will calculate state-by-state averages
+def calculate_state_by_state_rla_cost(totData: pd.DataFrame):
+    state_rla_cost_wpres = pd.concat([totData["state"], totData["year"],totData["state_po"],totData["cost_total"]], axis=1)
+    state_rla_cost_nopres = pd.concat([totData["state"], totData["state_po"],totData["cost_total_excl_pres"]], axis=1)
+    state_rla_cost_wpres = state_rla_cost_wpres[state_rla_cost_wpres['year']%4==0]
+    state_rla_cost_wpres.drop(columns=['year'], inplace=True)
+    state_rla_cost_wpres = state_rla_cost_wpres.groupby(by=['state','state_po']).mean()
+    state_rla_cost_nopres = state_rla_cost_nopres.groupby(by=['state','state_po']).mean()
+    if not os.path.exists("important-data"):
+        os.mkdir("important-data")
+    # 1. cost for elections that include president
+    state_rla_cost_wpres['cost_total'] = state_rla_cost_wpres['cost_total'].round(2)
+    # 2. cost for elections that exclude president
+    state_rla_cost_nopres['cost_total_excl_pres'] = state_rla_cost_nopres['cost_total_excl_pres'].round(2)
+    state_rla_cost_wpres.to_csv("important-data/avg_state_cost_(president).csv")
+    state_rla_cost_nopres.to_csv("important-data/avg_state_cost_(no_president).csv")    
+    return 
 
 # function that writes results
 def write_results(all_data: pd.DataFrame):
-    all_data.to_csv("all_data_by_state_yr.csv")
-    if not os.path.exists("state-by-state"):
-        os.mkdir("state-by-state")
+    if not os.path.exists("important-data"):
+        os.mkdir("important-data")
+    all_data['cost_total'] = all_data['cost_total'].round(2)
+    all_data.to_csv("important-data/all_data_by_state_yr.csv")
+    if not os.path.exists("important-data/state-by-state"):
+        os.mkdir("important-data/state-by-state")
     for st in set(all_data['state_po']):
         ssp = all_data[all_data.state_po == st].reset_index(drop=True)
-        ssp.to_csv(f"state-by-state/all_data_{st}.csv")
+        ssp.to_csv(f"important-data/state-by-state/all_data_{st}.csv")
+
+# function that generates a line plot showing the combined total cost of an RLA
+# for presidential years
+def graph_total_cost():
+    # get the correct data
+    data = pd.read_csv("important-data/total_yearly_cost_(president).csv")
+    years = data.year
+    cost = data.cost_total
+    plt.plot(years, cost, color='orange')
+    # create directory
+    if not os.path.exists("plots"):
+        os.mkdir('plots')
+    plt.xticks(ticks=years)
+    plt.xlabel("Year")
+    plt.ylabel("Cost (Millions of $)")
+    for yr in range(2000, 2025, 4):
+        y,c = data[data.year==yr].year.item(), data[data.year==yr].cost_total
+        dispc = (c/1e6).round(2).item()
+        plt.annotate(text=f"${dispc}M", xy=(y,c.item()))
+    plt.title("Combined Total Cost for Presidential Election Years")
+    plt.savefig('plots/total_presidential_plot_1.png')
+
+
+# function that generates a line plot showing the combined total cost of an RLA
+# for presidential years
+def graph_total_cost_non_presidential():
+    plt.clf()
+    # get the correct data
+    data = pd.read_csv("important-data/total_yearly_cost_(no_president).csv")
+    years = data.year
+    cost = data.cost_total_excl_pres
+    plt.plot(years, cost, color='lightblue')
+    # create directory
+    if not os.path.exists("plots"):
+        os.mkdir('plots')
+    plt.xticks(ticks=years)
+    plt.xlabel("Year")
+    plt.ylabel("Cost (Millions of $)")
+    for yr in range(2000, 2025, 2):
+        y,c = data[data.year==yr].year.item(), data[data.year==yr].cost_total_excl_pres
+        dispc = (c/1e6).round(2).item()
+        plt.annotate(text=f"${dispc}M", xy=(y,c.item()))
+    plt.title("Combined Total Cost for Election Years")
+    plt.savefig('plots/total_allyr_plot_2.png')
 
 ### main procedure
 if __name__ == '__main__':
@@ -121,5 +245,10 @@ if __name__ == '__main__':
         os.chdir(f"{dir}")
         os.system(f"python3 {script}")
         os.chdir("..")
-    totals_data = compute_totals()
+    totals_data = add_all3_costs()
+    calculate_national_rla_cost(totData=totals_data)
+    calculate_state_by_state_rla_cost(totData=totals_data)
     write_results(totals_data)
+    # generate plots
+    graph_total_cost()
+    graph_total_cost_non_presidential()

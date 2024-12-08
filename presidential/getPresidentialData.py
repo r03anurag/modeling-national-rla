@@ -94,11 +94,17 @@ def add_margins_and_num_ballots_from_2024(_2000_to_2020: pd.DataFrame):
     _00_to_24_ALL.reset_index(inplace=True, drop=True)
     return _00_to_24_ALL
 
+# function that applies the procedural cost model
+# Procedural Total: (# of ballots needed for RLA *  "minutely" wage of county clerk * time per ballot)
+def procedural_cost(nbals: int):
+    minutesWage = 0.35
+    minutes_balTime = 1.5
+    return nbals*minutesWage*minutes_balTime
+
 # calculate procedural costs for each state
 def calculate_procedural_costs(data: pd.DataFrame):
     # add the procdural cost according to our model: 1.5min/ballot, 0.35USD/ballot
-    data["procedural_cost"] = (data['num_ballots']*1.5*0.35).round(2)
-    data['procedural_cost'] = data['procedural_cost'].apply(func=lambda cost: f"{cost:.2f}")
+    data["procedural_cost"] = data["num_ballots"].apply(lambda nb: procedural_cost(nbals=nb)).round(2)
     return data
 
 # write final results all together, as well as state-by-state
