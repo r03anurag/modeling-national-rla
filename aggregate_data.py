@@ -211,6 +211,7 @@ def graph_total_cost():
         plt.annotate(text=f"${dispc}M", xy=(y,c.item()))
     plt.title("Combined Total Cost for Presidential Election Years")
     plt.savefig('plots/total_presidential_plot_1.png')
+    return 
 
 
 # function that generates a line plot showing the combined total cost of an RLA
@@ -234,6 +235,7 @@ def graph_total_cost_non_presidential():
         plt.annotate(text=f"${dispc}M", xy=(y,c.item()))
     plt.title("Combined Total Cost for Election Years")
     plt.savefig('plots/total_allyr_plot_2.png')
+    return
 
 # function that compares the average procedural costs for 
 # top 5 closest contests vs bottom 5. This is only for 2024
@@ -260,6 +262,9 @@ def graph_diff_in_swing_vs_nonswing():
     if not os.path.exists("plots"):
         os.mkdir('plots')
     plt.savefig("plots/top5_bottom5_plot_5.png")
+    print(top5.drop(columns=['year', 'num_ballots', 'procedural_cost']))
+    print(bottom5.drop(columns=['year', 'num_ballots', 'procedural_cost']))
+    return
     
 ### main procedure
 if __name__ == '__main__':
