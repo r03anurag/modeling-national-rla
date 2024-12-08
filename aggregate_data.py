@@ -235,6 +235,32 @@ def graph_total_cost_non_presidential():
     plt.title("Combined Total Cost for Election Years")
     plt.savefig('plots/total_allyr_plot_2.png')
 
+# function that compares the average procedural costs for 
+# top 5 closest contests vs bottom 5. This is only for 2024
+# presidential contests.
+def graph_diff_in_swing_vs_nonswing():
+    plt.clf()
+    data = pd.read_csv("presidential/presidential_margins.csv")
+    data = data[data.year == 2024].reset_index(drop=True)
+    data.drop(columns=["Unnamed: 0"], inplace=True)
+    data = data.sort_values(axis=0, by="margin", ascending=True)
+    top5 = data.head(5)
+    bottom5 = data.tail(5)
+    avgtop5 = top5['procedural_cost'].mean()
+    avgbottom5 = bottom5['procedural_cost'].mean()
+    fig, ax = plt.subplots()
+    fig.set_figheight(9)
+    fig.set_figwidth(8)
+    bars = ax.bar(["Top 5", "Bottom 5"],[avgtop5, avgbottom5], color='seagreen')
+    ax.set_ylabel("Average Procedural Cost ($)")
+    ax.set_title("Avg. Cost of Top 5 vs. Bottom 5 Closest Contests in 2024 President Election")
+    for bar in bars:
+        plt.text(bar.get_x() + bar.get_width() / 2, bar.get_height(),
+             f'${bar.get_height():.2f}', ha='center', va='bottom', fontsize=12)
+    if not os.path.exists("plots"):
+        os.mkdir('plots')
+    plt.savefig("plots/top5_bottom5_plot_5.png")
+    
 ### main procedure
 if __name__ == '__main__':
     # as a precautionary check, generate all data first
@@ -252,3 +278,4 @@ if __name__ == '__main__':
     # generate plots
     graph_total_cost()
     graph_total_cost_non_presidential()
+    graph_diff_in_swing_vs_nonswing()
